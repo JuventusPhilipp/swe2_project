@@ -19,9 +19,6 @@ public class SudokuHandler implements PuzzleHandler<Sudoku> {
     public Sudoku loadPuzzle(String selection) {
         if (selection.equals("load")) {
             File file = getSudokuFile();
-            if (file == null) {
-                logger.error("no file selected");
-            }
             assert file != null;
             return new SudokuImporterFile().getPuzzleFromFile(file.getPath());
         }
@@ -32,6 +29,7 @@ public class SudokuHandler implements PuzzleHandler<Sudoku> {
     public void savePuzzle(Sudoku sudoku) {
         File file = createSudokuFile();
         new SudokuExporter().exportPuzzle(sudoku, file);
+        logger.info("sudoku saved under {}", file.getPath());
     }
 
     @Override

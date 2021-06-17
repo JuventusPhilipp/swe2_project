@@ -30,11 +30,10 @@ public class SudokuPane extends StackPane {
     }
 
     public void loadSudoku(String selection) {
-        Sudoku tempSudoku = sudoku;
         try {
             sudoku = handler.loadPuzzle(selection);
         } catch (NullPointerException e) {
-            sudoku = tempSudoku;
+            logger.error("no file selected");
         }
         updateGrid();
     }
@@ -81,7 +80,7 @@ public class SudokuPane extends StackPane {
     private void drawLines(boolean rotate) {
         int startPoint = 100;
         int length = 675;
-        int padding = 75;
+        double padding = 75;
         for (int i = 0; i < 8; i++) {
             Line line;
             if (rotate) {

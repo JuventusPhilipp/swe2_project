@@ -5,7 +5,6 @@ import ch.juventus.puzzlesolver.business.puzzle.Sudoku;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -19,7 +18,7 @@ public class SudokuImporterWeb extends SudokuImporter {
     private static int counter = 0;
     private String difficulty;
     private String input = "";
-    private String url = "";
+    private String path = "";
 
     public SudokuImporterWeb() {
         this.easy = new ArrayList<>();
@@ -31,7 +30,11 @@ public class SudokuImporterWeb extends SudokuImporter {
     @Override
     public Sudoku getPuzzleFromWeb(String difficulty) {
         this.difficulty = difficulty;
-        readTextFromURL();
+        try {
+            readTextFromURL();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Sudoku sudoku = new Sudoku();
         Scanner scanner = new Scanner(input);
         for (int row = 0; row < 9; row++) {
@@ -39,6 +42,7 @@ public class SudokuImporterWeb extends SudokuImporter {
                 sudoku.setValue(row, column, Integer.parseInt(scanner.next()));
             }
         }
+        scanner.close();
         return sudoku;
     }
 
@@ -55,27 +59,29 @@ public class SudokuImporterWeb extends SudokuImporter {
     }
 
     private void setURL() {
-        if (counter >= easy.size())
-            counter = 0;
         switch (difficulty) {
-            case "easy": url = easy.get(counter); break;
-            case "medium": url = medium.get(counter); break;
-            case "hard": url = hard.get(counter); break;
+            case "medium": path = medium.get(counter); break;
+            case "hard": path = hard.get(counter); break;
+            default: path = easy.get(counter);
         }
-        counter++;
+        setCounter();
     }
 
-    private void readTextFromURL() {
+    private static void setCounter() {
+        counter++;
+        if (counter >= 3)
+            counter = 0;
+    }
+
+    private void readTextFromURL() throws IOException {
         setURL();
-        try {
-            URL url = new URL(this.url);
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        URL url = new URL(this.path);
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
             StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = in.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line).append(System.lineSeparator());
             }
-            in.close();
             input = sb.toString();
         } catch (IOException e) {
             e.printStackTrace();
