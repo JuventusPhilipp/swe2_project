@@ -1,0 +1,22 @@
+.root {
+    -fx-background-color: #3C3F41;
+    -fx-font: 14px "Monaco", monospace;
+}
+
+.button {
+    -fx-font-size: 14px;
+}
+
+#sudokuInputField {
+    -fx-background-color: #2B2B2B;
+    -fx-alignment: CENTER;
+
+    -fx-text-fill: #F0F0F0;
+
+    -fx-font-size: 22px;
+    -fx-font-weight: BOLD;
+}
+
+#sudokuBackgroundLine {
+    -fx-stroke: #F0F0F0;
+}
