@@ -21,6 +21,7 @@ public class MainScene extends Scene {
     private final Button buttonSolve = new Button("solve");
     private final Button buttonReset = new Button("reset");
     private final ToggleButton buttonDarkMode = new ToggleButton("DarkMode");
+    private final SudokuPane sudokuPane = new SudokuPane();
     private final String lightModeCssPath = Objects.requireNonNull(getClass().getResource("/presentation/lightMode.css")).toExternalForm();
     private final String darkModeCssPath = Objects.requireNonNull(getClass().getResource("/presentation/darkMode.css")).toExternalForm();
 
@@ -28,23 +29,33 @@ public class MainScene extends Scene {
         super(root, 725, 800);
         this.getStylesheets().add(lightModeCssPath);
         root.setBottom(initializeBotPane());
+        root.setCenter(initializeCenterPane());
     }
 
     private void setButtonLoad(ActionEvent event) {
-
+        if (root.getCenter().getClass().isInstance(sudokuPane)) {
+            sudokuPane.loadSudoku(buttonLoad.getText());
+            buttonLoad.setText("load");
+        }
     }
 
     private void setButtonSave(ActionEvent event) {
-
+        if (root.getCenter().getClass().isInstance(sudokuPane)) {
+            sudokuPane.saveSudoku();
+        }
 
     }
 
     private void setButtonSolve(ActionEvent event) {
-
+        if (root.getCenter().getClass().isInstance(sudokuPane)) {
+            sudokuPane.solveSudoku();
+        }
     }
 
     private void setButtonReset(ActionEvent event) {
-
+        if (root.getCenter().getClass().isInstance(sudokuPane)) {
+            sudokuPane.resetSudoku();
+        }
     }
 
     private void setButtonDarkMode(ActionEvent event) {
@@ -61,6 +72,11 @@ public class MainScene extends Scene {
 
     public Scene getScene() {
         return this;
+    }
+
+    private Pane initializeCenterPane() {
+        sudokuPane.setAlignment(Pos.CENTER);
+        return sudokuPane;
     }
 
     private Pane initializeBotPane() {
