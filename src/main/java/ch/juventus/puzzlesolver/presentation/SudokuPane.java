@@ -101,14 +101,11 @@ public class SudokuPane extends StackPane {
                 int finalRow = row;
                 int finalColumn = column;
                 TextField textField = new TextField();
-                textField.textProperty().addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-                        if (!newValue.matches("\\d{1,9}")) {
-                            textField.setText(newValue.replaceAll("[^\\d]", ""));
-                        } else {
-                            sudoku.setValue(finalRow, finalColumn, Integer.parseInt(newValue));
-                        }
+                textField.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                    if (!newValue.matches("\\d{1,9}")) {
+                        textField.setText(newValue.replaceAll("[^\\d]", ""));
+                    } else {
+                        sudoku.setValue(finalRow, finalColumn, Integer.parseInt(newValue));
                     }
                 });
                 textField.setId("sudokuInputField");
