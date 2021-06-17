@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 public class Sudoku implements Puzzle{
 
     private final static Logger logger = LoggerFactory.getLogger(Sudoku.class);
-
     private final static int SIZE = 9;
     private int[][] grid;
 
@@ -23,6 +22,7 @@ public class Sudoku implements Puzzle{
         grid[row][column] = value;
     }
 
+    @Override
     public void reset() {
         for (int column = 0; column < SIZE; column++) {
             for (int row = 0; row < SIZE; row++) {
@@ -34,5 +34,4 @@ public class Sudoku implements Puzzle{
     public int getSIZE() {
         return SIZE;
     }
-
 }

@@ -2,9 +2,6 @@ package ch.juventus.puzzlesolver.presentation;
 
 import ch.juventus.puzzlesolver.business.handler.SudokuHandler;
 import ch.juventus.puzzlesolver.business.puzzle.Sudoku;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -12,9 +9,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SudokuPane extends StackPane {
 
+    private final static Logger logger = LoggerFactory.getLogger(SudokuPane.class);
     private final GridPane inputFields = new GridPane();
     private final Pane backgroundPane = new Pane();
     private final SudokuHandler handler;
@@ -30,7 +30,12 @@ public class SudokuPane extends StackPane {
     }
 
     public void loadSudoku(String selection) {
-        sudoku = handler.loadPuzzle(selection);
+        Sudoku tempSudoku = sudoku;
+        try {
+            sudoku = handler.loadPuzzle(selection);
+        } catch (NullPointerException e) {
+            sudoku = tempSudoku;
+        }
         updateGrid();
     }
 
@@ -54,6 +59,7 @@ public class SudokuPane extends StackPane {
                 setFieldByRowColumnIndex(row, column, sudoku.getValue(row, column));
             }
         }
+        logger.info("grid got updated");
     }
 
     public void setFieldByRowColumnIndex(int row, int column, int value) {
@@ -103,6 +109,8 @@ public class SudokuPane extends StackPane {
                 TextField textField = new TextField();
                 textField.textProperty().addListener((observableValue, oldValue, newValue) -> {
                     if (!newValue.matches("\\d{1,9}")) {
+                        if (!newValue.equals(""))
+                            logger.info("value {} at [{}][{}] is not an integer", newValue, finalRow, finalColumn);
                         textField.setText(newValue.replaceAll("[^\\d]", ""));
                     } else {
                         sudoku.setValue(finalRow, finalColumn, Integer.parseInt(newValue));
@@ -113,24 +121,5 @@ public class SudokuPane extends StackPane {
                 inputFields.add(textField, column, row);
             }
         }
-    }
-
-
-
-
-
-
-
-
-    public int getFieldByRowColumnIndex(final int row, final int column) {
-        int result = 0;
-        ObservableList<Node> children = inputFields.getChildren();
-        for (Node field : children) {
-            if (GridPane.getRowIndex(field) == row && GridPane.getColumnIndex(field) == column) {
-                result = Integer.parseInt(((TextField) field).getText());
-                break;
-            }
-        }
-        return result;
     }
 }

@@ -7,8 +7,8 @@ import java.io.File;
 public abstract class SudokuImporter implements PuzzleImporter<Sudoku> {
 
     @Override
-    public Sudoku getPuzzleFromFile(File file) {
-        return new SudokuImporterFile().getPuzzleFromFile(file);
+    public Sudoku getPuzzleFromFile(String path) {
+        return new SudokuImporterFile().getPuzzleFromFile(path);
     }
 
     @Override
